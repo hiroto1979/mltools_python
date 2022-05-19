@@ -3,7 +3,11 @@
 import pandas as pd
 import numpy as np
 
-def df_missing(df, cols):
+# 欠損値を抽出し、データフレームにて表示を行う
+def df_missing(df, cols=[]):
+    if len(cols) == 0:
+        cols = df.columns
+
     results = pd.DataFrame(columns=["name", "count", "missing", "percent"])
     for col in cols:
         total = len(df[col])
@@ -14,8 +18,8 @@ def df_missing(df, cols):
 
     return results.reset_index(drop=True)
 
-
-def df_dtypes(df, cols):
+# データ型を抽出し、データフレームにて表示を行う
+def df_dtypes(df):
     t = df.dtypes
     results = pd.DataFrame(columns=["name", "dtype"])
     for i, v in t.items():
@@ -25,9 +29,10 @@ def df_dtypes(df, cols):
     return results.reset_index(drop=True)
 
 
-def df_summary(df, cols):
-    missing = df_missing(df, cols)
-    dt = df_dtypes(df, cols)
+# 欠損値+データ型を抽出し、データフレームにて表示を行う（全件のみ）
+def df_summary(df):
+    missing = df_missing(df)
+    dt = df_dtypes(df)
     results = pd.merge(missings, dt)
 
     return results.reset_index(drop=True)
